@@ -2,15 +2,16 @@ import { initDB, saveJob } from "./src/db";
 import { calculateMatches } from "./src/matcher";
 import { draftOutreach } from "./src/writer";
 import { renderPitchPDF } from "./src/pdf";
+import { generateMatchReport } from "./src/report_pdf";
 import { startServer } from "./src/server";
 import { execSync } from "child_process";
 import * as fs from "fs";
 
 if (!fs.existsSync("data")) fs.mkdirSync("data");
 
-async function fetchBSJ() {
-  console.log("🔍 Scouting Berlin Startup Jobs...");
-  const feedUrl = "https://berlinstartupjobs.com/feed/";
+async function fetchBSJ(category: string = "") {
+  console.log(`🔍 Scouting Berlin Startup Jobs [${category || "All"}]...`);
+  const feedUrl = category ? `https://berlinstartupjobs.com/${category}/feed/` : "https://berlinstartupjobs.com/feed/";
   const response = await fetch(feedUrl);
   const xml = await response.text();
   
@@ -32,7 +33,7 @@ async function fetchBSJ() {
         company: company ? company.trim() : "Unknown",
         description: descriptionMatch ? descriptionMatch[1].replace(/<[^>]*>?/gm, '').trim() : "",
         url: linkMatch[1],
-        source: "Berlin Startup Jobs",
+        source: category ? `BSJ (${category})` : "Berlin Startup Jobs",
         location: "Berlin"
       });
     }
@@ -46,16 +47,26 @@ async function main() {
   const db = initDB();
 
   if (command === "run") {
-    const bsjJobs = await fetchBSJ();
-    
-    let newCount = 0;
-    for (const job of bsjJobs) {
-      const result = saveJob(db, job);
-      if (result.changes > 0) newCount++;
+    // Expand research capabilities: Scrape multiple categories
+    const categories = ["", "engineering", "marketing", "sales", "design"];
+    let totalFound = 0;
+    let totalNew = 0;
+
+    for (const cat of categories) {
+      const bsjJobs = await fetchBSJ(cat);
+      totalFound += bsjJobs.length;
+      for (const job of bsjJobs) {
+        const result = saveJob(db, job);
+        if (result.changes > 0) totalNew++;
+      }
     }
     
-    console.log(`✅ Scout complete. Found ${bsjJobs.length} jobs, ${newCount} are new.`);
+    console.log(`✅ Scout complete. Found ${totalFound} jobs total, ${totalNew} are new.`);
     await calculateMatches(db);
+    
+    // Generate the PDF table report
+    await generateMatchReport(db);
+    
     console.log("🏁 Run complete.");
     
   } else if (command === "serve") {

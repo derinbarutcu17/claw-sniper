@@ -172,7 +172,7 @@
 <body>
     <header>
         <h1>Claw Job Sniper 🎯</h1>
-        <div id="stats-summary" class="status-badge">System Active</div>
+        <div id="stats-summary" class="status-badge" style="border: none;">Checking listings...</div>
     </header>
 
     <div id="main-content">
@@ -211,18 +211,21 @@
             const goodGrid = document.getElementById('good-grid');
             const midGrid = document.getElementById('mid-grid');
             const lowGrid = document.getElementById('low-grid');
+            const stats = document.getElementById('stats-summary');
 
             const good = allJobs.filter(j => j.category === 'Good Match');
             const mid = allJobs.filter(j => j.category === 'Mid Match');
             const low = allJobs.filter(j => j.category === 'Low Match');
 
-            const renderCard = (job) => `
-                <div class="job-card" onclick="openModal(${job.id})">
-                    <div class="company">${job.company}</div>
-                    <div class="title">${job.title}</div>
-                    <div style="font-size: 11px; color: var(--muted)">Source: ${job.source} | Score: ${job.match_score}%</div>
+            stats.innerText = \`\${allJobs.length} Jobs Total | \${good.length} Good | \${mid.length} Mid\`;
+
+            const renderCard = (job) => \`
+                <div class="job-card" onclick="openModal(\${job.id})">
+                    <div class="company">\${job.company}</div>
+                    <div class="title">\${job.title}</div>
+                    <div style="font-size: 11px; color: var(--muted)">Source: \${job.source} | Score: \${job.match_score}%</div>
                 </div>
-            `;
+            \`;
 
             goodGrid.innerHTML = good.map(renderCard).join('');
             midGrid.innerHTML = mid.map(renderCard).join('');
@@ -249,7 +252,7 @@
                 </div>
 
                 <div style="margin-top:40px; display:flex; gap:16px; align-items: center;">
-                    <button class="btn-action" onclick="requestDraft(\${job.id})">🎯 Draft with AI Bot</button>
+                    <button class="btn-action" onclick="requestDraft(\${job.id})">🎯 Draft a message with OpenClaw</button>
                     <a href="\${job.url}" target="_blank" class="btn-secondary">View Full Listing</a>
                 </div>
             \`;
