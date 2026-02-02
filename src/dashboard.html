@@ -199,6 +199,7 @@
         async function fetchJobs() {
             try {
                 const response = await fetch('/api/jobs');
+                if (!response.ok) throw new Error("HTTP error! status: " + response.status);
                 allJobs = await response.json();
                 renderDashboard();
             } catch (e) {
@@ -215,13 +216,13 @@
             const mid = allJobs.filter(j => j.category === 'Mid Match');
             const low = allJobs.filter(j => j.category === 'Low Match');
 
-            const renderCard = (job) => \`
-                <div class="job-card" onclick="openModal(\${job.id})">
-                    <div class="company">\${job.company}</div>
-                    <div class="title">\${job.title}</div>
-                    <div style="font-size: 11px; color: var(--muted)">Source: \${job.source} | Score: \${job.match_score}%</div>
+            const renderCard = (job) => `
+                <div class="job-card" onclick="openModal(${job.id})">
+                    <div class="company">${job.company}</div>
+                    <div class="title">${job.title}</div>
+                    <div style="font-size: 11px; color: var(--muted)">Source: ${job.source} | Score: ${job.match_score}%</div>
                 </div>
-            \`;
+            `;
 
             goodGrid.innerHTML = good.map(renderCard).join('');
             midGrid.innerHTML = mid.map(renderCard).join('');

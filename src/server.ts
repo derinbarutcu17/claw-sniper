@@ -3,7 +3,7 @@ import { Database } from "bun:sqlite";
 import * as fs from "fs";
 import { execSync } from "child_process";
 
-const DB_PATH = "data/sniper.db";
+const DB_PATH = "/Users/derin/.openclaw/workspace/claw-job-sniper/data/sniper.db";
 const OPENCLAW_BIN = "/Users/derin/.npm-global/bin/openclaw";
 
 export function startServer() {
