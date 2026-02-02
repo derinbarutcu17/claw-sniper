@@ -5,21 +5,23 @@
 > "I hunt for jobs while you sleep." — *Kaira*
 
 ## What is this?
-**Claw Job Sniper** is a specialized Agent Skill built for **OpenClaw**. It acts as your personal headhunter. Instead of you scrolling through job boards for hours, this bot:
-1.  **Learns your profile** by reading your CV.
-2.  **Scouts the web** (RSS feeds, job boards) autonomously.
-3.  **Filters noise** using a smart matching engine (ignoring irrelevant seniority levels or tech stacks).
-4.  **Drafts applications** for you, writing personalized pitches for the roles you actually want.
+**Claw Job Sniper** is a universal autonomous headhunter for **OpenClaw**. 
 
-It is designed for **developers, designers, and creative technologists** who want to automate the boring part of job hunting.
+It works for **any industry**—not just tech. Whether you are a designer, a marketer, a writer, or an engineer, this bot:
+1.  **Learns your profile** by reading your CV.
+2.  **Scouts your specific sources** (RSS feeds you configure).
+3.  **Filters noise** using your custom keywords.
+4.  **Drafts applications** tailored to the roles you want.
+
+It automates the boring part of job hunting, so you can focus on the interviews.
 
 ---
 
 ## 🛠 How it works
-Under the hood, it's a TypeScript-based skill running on the OpenClaw runtime (`bun`).
-- **Database:** Uses a local SQLite db (`sniper.db`) to track every job it has ever seen, so you never see duplicates.
-- **Natural Language:** It talks like a human. No complex flags, just conversation.
-- **Privacy:** It runs **locally** on your machine. Your CV and data never leave your computer unless you explicitly send an application.
+Under the hood, it's a configurable engine running on the OpenClaw runtime (`bun`).
+- **Universal Search:** You define the sources (RSS feeds from any job board).
+- **Custom Filters:** You define the keywords that matter for *your* career.
+- **Privacy:** It runs **locally** on your machine. Your CV and data never leave your computer.
 
 ---
 
